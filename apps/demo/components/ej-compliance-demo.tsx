@@ -103,6 +103,21 @@ function getErrorMessage(caught: unknown, fallback: string): string {
   return fallback;
 }
 
+function getWalletConnectionErrorMessage(walletName: string, caught: unknown): string {
+  if (caught instanceof Error && caught.message) {
+    return caught.message;
+  }
+
+  if (typeof caught === "object" && caught !== null && "message" in caught) {
+    const message = caught.message;
+    if (typeof message === "string" && message.trim()) {
+      return message;
+    }
+  }
+
+  return `${walletName} did not complete the connection. Unlock the wallet, approve the connection request, and retry.`;
+}
+
 export function EjComplianceDemo() {
   const solanaClient = useSolanaClient();
   const wallet = useWalletConnection();
@@ -190,14 +205,18 @@ export function EjComplianceDemo() {
     }
   }
 
-  async function connectWallet(connectorId: string) {
+  async function connectWallet(connector: WalletConnector) {
     setError(null);
 
     try {
-      await wallet.connect(connectorId);
+      await wallet.connect(connector.id, {
+        autoConnect: false,
+        allowInteractiveFallback: true
+      });
       setIsWalletPickerOpen(false);
     } catch (caught) {
-      setError(getErrorMessage(caught, "Wallet connection failed."));
+      await wallet.disconnect().catch(() => undefined);
+      setError(getWalletConnectionErrorMessage(connector.name, caught));
     }
   }
 
@@ -352,7 +371,7 @@ export function EjComplianceDemo() {
                         <button
                           type="button"
                           className="inline-flex min-h-9 items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground hover:opacity-95 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
-                          onClick={() => connectWallet(connector.id)}
+                          onClick={() => connectWallet(connector)}
                           disabled={wallet.connecting}
                         >
                           {wallet.connecting ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}

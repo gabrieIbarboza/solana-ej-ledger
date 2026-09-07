@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { autoDiscover, filterByNames } from "@solana/client";
 import { SolanaProvider } from "@solana/react-hooks";
 
 function getSolanaEndpoint(): string {
@@ -11,6 +12,10 @@ function getSolanaWebsocketEndpoint(endpoint: string): string {
   return process.env.NEXT_PUBLIC_SOLANA_WS_URL ?? endpoint.replace("https://", "wss://").replace("http://", "ws://");
 }
 
+const walletConnectors = autoDiscover({
+  filter: filterByNames("phantom", "solflare")
+});
+
 export function Providers({ children }: Readonly<{ children: ReactNode }>) {
   const endpoint = getSolanaEndpoint();
 
@@ -20,7 +25,7 @@ export function Providers({ children }: Readonly<{ children: ReactNode }>) {
         endpoint,
         websocketEndpoint: getSolanaWebsocketEndpoint(endpoint),
         commitment: "confirmed",
-        walletConnectors: "default"
+        walletConnectors
       }}
     >
       {children}
