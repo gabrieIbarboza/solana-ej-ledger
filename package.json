@@ -1,0 +1,23 @@
+{
+  "name": "ej-ledger",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev:api & npm run dev:demo",
+    "dev:api": "npm run dev --workspace @ej-ledger/api",
+    "dev:demo": "npm run dev --workspace @ej-ledger/demo",
+    "test": "vitest run",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

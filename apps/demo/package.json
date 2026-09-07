@@ -1,0 +1,28 @@
+{
+  "name": "@ej-ledger/demo",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "typecheck": "next typegen && tsc -p tsconfig.json --noEmit --incremental false",
+    "build": "next build --webpack"
+  },
+  "dependencies": {
+    "@ej-ledger/sdk": "0.1.0",
+    "@solana/client": "^1.7.0",
+    "@solana/react-hooks": "^1.4.1",
+    "lucide-react": "^0.468.0",
+    "next": "^16.3.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.9.0"
+  }
+}

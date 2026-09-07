@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Validação — EJ Ledger</title>
+  <style>
+    body { max-width: 920px; margin: 40px auto; padding: 0 20px; font: 16px/1.55 system-ui, sans-serif; color: #172033; }
+    h1, h2 { line-height: 1.2; } .meta { color: #5d6777; } .verdict { padding: 20px; background: #fff4db; border-left: 5px solid #d97706; border-radius: 6px; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; } th, td { padding: 10px; border: 1px solid #d8dee9; text-align: left; vertical-align: top; } th { background: #f4f7fb; }
+    a { color: #0759b8; } .high { color: #b42318; font-weight: 700; } .medium { color: #9a6700; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>Validação de ideia: EJ Ledger</h1>
+  <p class="meta">06 set. 2026 · Escopo: compliance de despesas, aprovação, reembolso e auditoria para Empresas Juniores brasileiras.</p>
+
+  <section class="verdict">
+    <h2>Veredito: PIVOT / GO VALIDATE</h2>
+    <p>Construa somente um piloto off-chain focado no workflow de RID e reembolso. Não construa ainda um produto Solana-first, programa on-chain próprio, Pix on/off-ramp ou tesouraria DeFi. Há evidência de que o processo existe e é regulamentado, mas ainda não há evidência de dor urgente ou disposição a pagar.</p>
+  </section>
+
+  <h2>O que é promissor</h2>
+  <p>O problema é específico e recorrente: EJs são associações civis geridas por estudantes, com troca frequente de gestão. A legislação e documentos institucionais pesquisados mostram obrigações de controle financeiro; estatutos de EJs descrevem reembolso condicionado a comprovante e aprovação. Isso sustenta o wedge “RID versionado → pedido → decisão → aprovação → comprovante → histórico”.</p>
+  <ul>
+    <li>A <a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13267.htm">Lei 13.267/2016</a> formaliza o contexto institucional de EJs.</li>
+    <li>A <a href="https://proex.ufes.br/planilha-orcamentaria">UFES</a> exige planilha orçamentária anual; seus processos também listam regimento interno, ata de gestão e documentação financeira.</li>
+    <li>Regimentos de EJs pesquisados exigem comprovantes e aprovação prévia para reembolso, por exemplo este <a href="https://10409764430985586962.googlegroups.com/attach/dff8d7f8cc4be787/Regimento%20modificado.pdf?part=0.1&vt=ANaJVrGthUiO4NOxYkxsMy-V1CrlkIGRVtSGo_MgcCitC5KSXoZ6iUBAhG7VeUA8mlyXyUYXzy8bh5nh8ild5flp6asvchtbBSJ7nYeMyykQIjfEtxEtK_4">exemplo da UFOP</a>.</li>
+  </ul>
+
+  <h2>Sinais de demanda e lacunas</h2>
+  <table><tr><th>Sinal</th><th>Força</th><th>Leitura</th></tr>
+    <tr><td>Políticas, comprovantes e aprovação aparecem em fontes independentes.</td><td>Moderado</td><td>O workflow é real; não demonstra orçamento ou urgência.</td></tr>
+    <tr><td>Planilhas, documentos e conversas são substitutos plausíveis.</td><td>Moderado</td><td>Indica solução manual, a confirmar em entrevistas sobre casos recentes.</td></tr>
+    <tr><td>Depoimentos de compradores, LOIs ou pilotos pagos.</td><td>Ausente</td><td>Sem isso, não há justificativa para engenharia ampla.</td></tr>
+  </table>
+
+  <h2>Concorrência e substitutos</h2>
+  <p>Não foi identificado um produto vivo claramente dedicado a EJs brasileiras sobre Solana. Mas o espaço amplo não está vazio: <a href="https://www.reimburseai.app/">Reimburse AI</a> oferece política, auditoria de recibos e reembolsos on-chain para empresas Web3; <a href="https://ethglobal.com/showcase/cryptexpenso-1jgpt">cryptexpenso</a> é um projeto de despesas com aprovações e pagamentos em Solana/PYUSD; e <a href="https://docs.squads.so/main/getting-started/treasury-management-overview">Squads</a> já fornece tesouraria multisig, papéis e critérios de aprovação. O diferencial não pode ser “reembolso on-chain”; deve ser a tradução de RIDs brasileiros e a distribuição na rede EJ.</p>
+
+  <h2>O teste de necessidade de blockchain</h2>
+  <p><strong>Se removemos a blockchain, o produto ainda resolve o problema central?</strong> Sim: regras de RID, upload de nota, aprovação e trilha de auditoria funcionam com banco de dados, histórico imutável de aplicação e exportação. A blockchain melhora autocustódia e verificabilidade apenas quando a EJ já mantém fundos on-chain. Portanto, ela é opcional no wedge, não requisito de product-market fit.</p>
+
+  <h2>Scorecard</h2>
+  <table><tr><th>Dimensão</th><th>Nota (1–3)</th><th>Motivo</th></tr>
+    <tr><td>Founder fit</td><td>1</td><td>Não informado; validar acesso a EJs.</td></tr>
+    <tr><td>Velocidade do MVP</td><td>2</td><td>Workflow estreito é possível em até duas semanas; integrações financeiras não.</td></tr>
+    <tr><td>Distribuição</td><td>1</td><td>Canal por federações/núcleos/parceiros ainda não foi comprovado.</td></tr>
+    <tr><td>Market pull</td><td>2</td><td>Necessidade operacional existe, sem sinal de compra.</td></tr>
+    <tr><td>Receita</td><td>1</td><td>Preço e comprador não foram testados.</td></tr>
+    <tr><th>Total</th><th>7/15</th><th>Abaixo do limiar de “go build”.</th></tr>
+  </table>
+
+  <h2>Riscos prioritários</h2>
+  <ul>
+    <li><span class="high">Alto — adoção:</span> Pix/BRL é o comportamento natural; carteira, USDC e multisig podem tornar o fluxo pior.</li>
+    <li><span class="high">Alto — regulação:</span> não custodiar recursos nem construir conversão Pix-cripto; use parceiros e revisão jurídica antes disso.</li>
+    <li><span class="high">Alto — privacidade:</span> telefone, nota e contexto devem ficar off-chain. Mesmo hashes devem ser tratados como potencialmente correlacionáveis.</li>
+    <li><span class="medium">Médio — produto:</span> OCR, exceções de política e conciliação bancária devem ficar fora do primeiro teste.</li>
+  </ul>
+
+  <h2>Plano de validação: 7 dias</h2>
+  <ol>
+    <li>Selecionar 5 EJs de perfis diferentes e falar com financeiro, presidência e 1 membro por EJ.</li>
+    <li>Perguntar sobre os últimos três reembolsos, não sobre intenção: onde iniciou, quanto tempo levou, quem aprovou, o que se perdeu e como é o RID.</li>
+    <li>Coletar 3 RIDs anonimizados e modelar somente 10 regras recorrentes.</li>
+    <li>Prototipar um fluxo clicável/WhatsApp: consulta de regra, solicitação, aprovação e comprovante.</li>
+    <li>Pedir compromisso concreto: piloto de 30 dias, acesso a casos reais e preço aceitável. Meta: 3 design partners e ao menos 1 LOI ou piloto pago.</li>
+  </ol>
+
+  <h2>Decisão após o sprint</h2>
+  <p><strong>Persistir:</strong> se três EJs compartilharem casos reais, duas aceitarem rodar o fluxo e uma der compromisso financeiro. <strong>Pivotar:</strong> se a dor estiver só em organização, vender um SaaS web/WhatsApp de compliance e exportação Pix, sem blockchain. <strong>Adicionar Solana:</strong> somente se uma EJ parceira já tiver tesouraria on-chain e pedir multisig/prova pública; integre Squads, sem programa customizado.</p>
+</body>
+</html>

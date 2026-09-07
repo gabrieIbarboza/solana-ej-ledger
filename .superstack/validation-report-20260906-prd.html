@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Validacao de Ideia - EJ Compliance Core</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5f6b7a;
+      --line: #d8dee6;
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --accent: #0f766e;
+      --warn: #9a3412;
+      --bad: #b91c1c;
+      --good: #166534;
+    }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+    header {
+      margin-bottom: 28px;
+    }
+    h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.05;
+      margin: 0 0 14px;
+      letter-spacing: 0;
+    }
+    h2 {
+      font-size: 22px;
+      margin: 0 0 16px;
+    }
+    p {
+      margin: 0 0 12px;
+    }
+    a {
+      color: #0b5cad;
+    }
+    .lede {
+      max-width: 820px;
+      font-size: 18px;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 2px rgba(18, 27, 38, 0.04);
+    }
+    .span-4 { grid-column: span 4; }
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+    .kicker {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .verdict {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #99f6e4;
+      color: #134e4a;
+      background: #ccfbf1;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .score {
+      font-size: 44px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .muted {
+      color: var(--muted);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      color: #334155;
+      background: #f8fafc;
+    }
+    ul, ol {
+      padding-left: 20px;
+      margin: 0 0 6px;
+    }
+    li {
+      margin: 8px 0;
+    }
+    .pill {
+      display: inline-block;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid var(--line);
+      background: #f8fafc;
+    }
+    .good { color: var(--good); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+    code {
+      background: #eef2f7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 0.92em;
+    }
+    @media (max-width: 800px) {
+      main { padding: 28px 16px 48px; }
+      .span-4, .span-6, .span-8 { grid-column: span 12; }
+      table { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="kicker">Validate Idea Sprint</div>
+      <h1>EJ Compliance Core</h1>
+      <p class="lede">Validacao atualizada com base no PRD anexado e no novo contexto dos fundadores: dois estudantes universitarios, um desenvolvedor e uma parceira de negocios, com experiencia direta na burocracia de criar uma Empresa Junior.</p>
+    </header>
+
+    <section class="grid">
+      <article class="card span-8">
+        <div class="verdict">Veredito: Pivot de posicionamento, Go para o MVP de hackathon</div>
+        <p><strong>A ideia melhorou.</strong> O PRD reduz o escopo para um motor deterministico de compliance: RID estruturado, despesa, decisao e prova verificavel. Isso transforma a ideia de "app financeiro cripto para EJs" em uma infraestrutura pequena e testavel.</p>
+        <p>O veredito de negocio ainda nao e "go build company" porque falta a evidencia que realmente importa: EJs usando dados reais, abrindo seus RIDs, aceitando mudar o fluxo e pagando, mesmo que pouco, por um piloto.</p>
+        <p>A recomendacao e construir o MVP do PRD para demonstracao e validacao, mas vender primeiro como <strong>Compliance Core para Empresas Juniores</strong>. Solana deve ficar como trilha de prova e futura ponte para Squads, nao como promessa central.</p>
+      </article>
+
+      <aside class="card span-4">
+        <div class="score">11/15</div>
+        <p class="muted">Score atualizado: antes a ideia era fraca em founder fit e distribuicao; agora ha vantagem real por acesso universitario, dor vivida e time complementar.</p>
+        <p><span class="pill">Confianca: 0.74</span></p>
+      </aside>
+
+      <article class="card span-12">
+        <h2>Scorecard</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Dimensao</th>
+              <th>Score</th>
+              <th>Leitura</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Founder fit</td>
+              <td>3/3</td>
+              <td>Voce viveu a dor da burocracia de EJ, Uara cobre venda/negocio, e voces estao no ambiente dos usuarios.</td>
+            </tr>
+            <tr>
+              <td>MVP speed</td>
+              <td>3/3</td>
+              <td>O PRD e factivel em 12 horas para demo e em ate 2 semanas para um piloto pequeno se o escopo continuar no Core/API/SDK/proof.</td>
+            </tr>
+            <tr>
+              <td>Distribution clarity</td>
+              <td>2/3</td>
+              <td>Conversar com universitarios e encontrar EJs e um canal inicial plausivel, mas ainda falta uma lista concreta e donos de dor identificados.</td>
+            </tr>
+            <tr>
+              <td>Market pull</td>
+              <td>2/3</td>
+              <td>Ha evidencia estrutural de prestacao de contas, aprovacao e comprovantes, mas ainda nao ha compromisso de adocao.</td>
+            </tr>
+            <tr>
+              <td>Revenue path</td>
+              <td>1/3</td>
+              <td>O comprador pode ser a EJ, nucleo/federacao ou universidade, mas preco, urgencia e budget seguem nao validados.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="card span-6">
+        <h2>Demand Signals</h2>
+        <ul>
+          <li><strong>Obrigacao institucional:</strong> a Lei 13.267/2016 define EJs como associacoes civis geridas por estudantes e vinculadas a instituicoes de ensino superior. Isso cria uma camada formal de governanca, nao so um grupo informal.</li>
+          <li><strong>Prestacao de contas real:</strong> a UFES lista relatorio anual, documentacao comprobatoria, planilha financeira, livro diario e atas de aprovacao para EJs. Isso sustenta a dor de evidencia e rastreabilidade.</li>
+          <li><strong>Workflow manual recorrente:</strong> politicas de reembolso em organizacoes brasileiras normalmente exigem formulario, comprovantes e aprovacoes. O padrao e facilmente mapeavel para regras deterministicas.</li>
+          <li><strong>Mercado adjacente existe:</strong> produtos como Reimburse AI e projetos como cryptexpenso mostram que expense compliance + on-chain payout/proof e uma categoria emergente em Web3, ainda que nao focada em EJs.</li>
+        </ul>
+        <p class="muted">Demand score: 2/3. Moderado. Bom o bastante para sprint de validacao, insuficiente para assumir pagamento.</p>
+      </article>
+
+      <article class="card span-6">
+        <h2>Competition</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Concorrente/substituto</th>
+              <th>Implicacao</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Atual</td>
+              <td>WhatsApp, Google Forms, planilhas, Drive</td>
+              <td>Barato, familiar e dificil de trocar sem dor clara.</td>
+            </tr>
+            <tr>
+              <td>Expense SaaS</td>
+              <td>Ferramentas genericas de despesas</td>
+              <td>Mais maduras, mas pouco adaptadas ao RID e rotina de EJ.</td>
+            </tr>
+            <tr>
+              <td>Crypto treasury</td>
+              <td>Squads</td>
+              <td>Otimo para controle de tesouraria on-chain, nao resolve interpretacao de RID.</td>
+            </tr>
+            <tr>
+              <td>Crypto expense</td>
+              <td>Reimburse AI, cryptexpenso, ExpenseDAO</td>
+              <td>Validam a categoria, mas miram empresas Web3/DAOs, nao EJs brasileiras.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="card span-12">
+        <h2>Crypto Necessity</h2>
+        <p><strong>O que quebra se remover Solana?</strong> O produto central ainda funciona: policy engine, API, SDK, aprovacao, comprovante, historico e exportacao podem operar em banco comum com logs imutaveis de aplicacao.</p>
+        <p><strong>O que Solana melhora?</strong> Prova publica de que uma decisao existiu sob uma versao de politica, baixo custo por registro, verificabilidade externa e caminho futuro para tesouraria via Squads. O Memo Program e suficiente para o MVP de prova, porque permite registrar uma string verificavel em log de transacao sem criar um programa proprio.</p>
+        <p><strong>Conclusao:</strong> Solana e uma vantagem demonstravel no hackathon e pode ser defensavel para EJs com treasury on-chain no futuro. Para o primeiro cliente real, ela nao deve ser requisito de uso.</p>
+      </article>
+
+      <article class="card span-6">
+        <h2>Risk Map</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Risco</th>
+              <th>Severidade</th>
+              <th>Mitigacao</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Market: EJs podem achar o problema chato, mas nao caro.</td>
+              <td class="bad">Alta</td>
+              <td>Validar com os ultimos 3 reembolsos reais e pedir compromisso de piloto.</td>
+            </tr>
+            <tr>
+              <td>Regulatorio: Pix, custodia, on/off-ramp e pagamentos reais ampliam responsabilidade.</td>
+              <td class="bad">Alta</td>
+              <td>Manter pagamentos fora do MVP; exportar decisao e comprovante.</td>
+            </tr>
+            <tr>
+              <td>Privacidade: recibos, telefone e justificativas sao dados sensiveis.</td>
+              <td class="bad">Alta</td>
+              <td>Guardar dados off-chain; publicar apenas hashes e metadados minimos.</td>
+            </tr>
+            <tr>
+              <td>Produto: transformar RID real em regras pode ser mais ambiguo que o demo.</td>
+              <td class="warn">Media</td>
+              <td>Comecar com 10 regras de alto volume e fallback para NEEDS_APPROVAL.</td>
+            </tr>
+            <tr>
+              <td>Tecnico: prova on-chain nao pode afetar a decisao de compliance.</td>
+              <td class="warn">Media</td>
+              <td>Isolar Proof Service; falha de Solana vira erro de prova, nao muda APPROVED/BLOCKED.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="card span-6">
+        <h2>Integration First</h2>
+        <p><strong>Nao escreva um programa Solana customizado no MVP.</strong> O proof flow pode usar transacao simples com Memo Program e hashes deterministas. Isso reduz tempo, auditoria e superficie de falha.</p>
+        <p><strong>Squads entra depois.</strong> Squads ja oferece multisig, papeis, aprovacoes, spending limits e operacoes de tesouraria para equipes on-chain. EJ Compliance deve decidir se a despesa segue a politica; Squads deve controlar movimentacao de fundos quando houver treasury cripto.</p>
+        <p><strong>Helius e infraestrutura.</strong> Use Helius para RPC, envio, indexacao ou webhooks, sem deixar Helius entrar na logica de negocio.</p>
+      </article>
+
+      <article class="card span-12">
+        <h2>Plano de Validacao</h2>
+        <ol>
+          <li><strong>Montar lista de 20 EJs em 48 horas:</strong> universidade de voces, cursos proximos, redes de estudantes, nucleos regionais e paginas publicas.</li>
+          <li><strong>Falar com 10 pessoas:</strong> 4 financeiro/admin, 3 presidentes/diretores, 3 membros que pedem reembolso.</li>
+          <li><strong>Pedir evidencias reais:</strong> um RID anonimo, uma planilha/formulario usado hoje, e os ultimos 3 casos de despesa/reembolso sem dados pessoais.</li>
+          <li><strong>Rodar o demo com dados deles:</strong> converter 5 a 10 regras reais e testar se a decisao bate com o que o financeiro faria.</li>
+          <li><strong>Buscar compromisso:</strong> piloto de 30 dias, LOI, ou pagamento simbolico. Sem isso, voces tem um bom projeto de hackathon, nao validacao comercial.</li>
+        </ol>
+      </article>
+
+      <article class="card span-12">
+        <h2>Pivot or Persist</h2>
+        <p><strong>Persistir:</strong> Compliance Core para EJs, com SDK/API e demo funcional. Esse e o melhor recorte do PRD.</p>
+        <p><strong>Pivotar:</strong> tirar "ledger on Solana" do centro da narrativa. O centro deve ser "RID executavel e auditavel". Solana e prova, nao a razao para o usuario comprar.</p>
+        <p><strong>Matar por enquanto:</strong> Pix, reimbursement processing, yield, swaps, full Squads workflow, IA que interpreta RID arbitrario, e programa Solana proprio.</p>
+      </article>
+
+      <article class="card span-12">
+        <h2>Sources</h2>
+        <ul>
+          <li><a href="https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2016/lei/l13267.htm">Lei 13.267/2016</a></li>
+          <li><a href="https://proex.ufes.br/perguntas-frequentes-sobre-ejs">UFES Proex: perguntas frequentes sobre EJs</a></li>
+          <li><a href="https://docs.squads.so/main/getting-started/treasury-management-overview">Squads Treasury Management Overview</a></li>
+          <li><a href="https://docs.squads.so/main/basics">Squads Docs: basics</a></li>
+          <li><a href="https://www.solana-program.com/docs/memo">Solana Memo Program docs</a></li>
+          <li><a href="https://www.helius.dev/docs/webhooks">Helius Webhooks docs</a></li>
+          <li><a href="https://www.reimburseai.app/docs">Reimburse AI documentation</a></li>
+          <li><a href="https://ethglobal.com/showcase/cryptexpenso-1jgpt">cryptexpenso, ETHGlobal showcase</a></li>
+          <li><a href="https://devpost.com/software/refund-fmn5jt">ExpenseDAO, Devpost</a></li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

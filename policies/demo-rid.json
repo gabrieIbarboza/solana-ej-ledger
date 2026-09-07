@@ -1,0 +1,20 @@
+{
+  "organizationId": "ej-demo",
+  "version": "2026.1",
+  "rules": [
+    {
+      "category": "transportation",
+      "allowed": true,
+      "maxAmount": 100
+    },
+    {
+      "category": "food",
+      "allowed": true,
+      "maxAmount": 60
+    },
+    {
+      "category": "entertainment",
+      "allowed": false
+    }
+  ]
+}
