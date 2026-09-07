@@ -64,6 +64,16 @@ describe("ComplianceClient", () => {
     await expect(client.submitSignedProofTransaction("AQID")).resolves.toMatchObject({ signature: "sig" });
   });
 
+  it("passes a receipt hash only to proof intent requests", async () => {
+    const fetcher = vi.fn(async () => response({ payload: {}, memo: "memo", decision: {}, cluster: "devnet" }));
+    const client = new ComplianceClient({ baseUrl: "http://localhost:8787", fetcher });
+    await client.createProofIntent(expense, { receiptHash: "a".repeat(64) });
+    expect(fetcher).toHaveBeenCalledWith(
+      "http://localhost:8787/v1/proofs/intent",
+      expect.objectContaining({ body: expect.stringContaining("receiptHash") })
+    );
+  });
+
   it("fetches shared organization proof history for a configured viewer wallet", async () => {
     const fetcher = vi.fn(async () => response({
       organizationId: "ej-demo",

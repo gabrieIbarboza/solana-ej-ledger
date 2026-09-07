@@ -13,6 +13,10 @@ export interface ProofIntent {
   cluster: "devnet";
 }
 
+export interface CreateProofIntentOptions {
+  receiptHash?: string;
+}
+
 export interface ProofSubmitResult {
   signature: string;
   explorerUrl: string;
@@ -34,6 +38,7 @@ export interface OrganizationProofHistoryItem {
   proofHash: string;
   policyHash: string;
   expenseHash: string;
+  receiptHash?: string;
 }
 
 export interface OrganizationProofHistory {
@@ -71,10 +76,10 @@ export class ComplianceClient {
     return this.request<Policy>(`/v1/policies/${encodeURIComponent(organizationId)}`);
   }
 
-  async createProofIntent(expense: Expense): Promise<ProofIntent> {
+  async createProofIntent(expense: Expense, options: CreateProofIntentOptions = {}): Promise<ProofIntent> {
     return this.request<ProofIntent>("/v1/proofs/intent", {
       method: "POST",
-      body: JSON.stringify(expense)
+      body: JSON.stringify({ ...expense, ...options })
     });
   }
 

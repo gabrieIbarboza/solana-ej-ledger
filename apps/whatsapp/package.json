@@ -1,0 +1,27 @@
+{
+  "name": "@ej-ledger/whatsapp",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx src/server.ts",
+    "test": "vitest run",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "build": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@ej-ledger/core": "0.1.0",
+    "@ej-ledger/proof": "0.1.0",
+    "@ej-ledger/sdk": "0.1.0",
+    "@solana/kit": "^8.2.0",
+    "@hono/node-server": "^1.13.0",
+    "hono": "^4.6.0",
+    "openai": "^7.10.0",
+    "twilio": "^6.1.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

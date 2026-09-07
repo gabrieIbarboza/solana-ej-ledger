@@ -13,3 +13,7 @@ export const expenseSchema = z.object({
 export const signedTransactionSchema = z.object({
   signedTransaction: z.string().min(1)
 });
+
+export const proofIntentSchema = expenseSchema.extend({
+  receiptHash: z.string().regex(/^[a-f0-9]{64}$/).optional()
+});

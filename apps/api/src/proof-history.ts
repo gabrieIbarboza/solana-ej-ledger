@@ -34,6 +34,7 @@ export interface OrganizationProofHistoryItem {
   proofHash: string;
   policyHash: string;
   expenseHash: string;
+  receiptHash?: string;
 }
 
 function addressesMatch(first: string, second: string): boolean {

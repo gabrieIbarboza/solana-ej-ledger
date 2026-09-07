@@ -4,6 +4,7 @@ export {
 } from "./client";
 export type {
   ComplianceClientConfig,
+  CreateProofIntentOptions,
   OrganizationProofHistory,
   OrganizationProofHistoryItem,
   ProofConfirmationStatus,

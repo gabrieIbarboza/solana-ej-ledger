@@ -11,6 +11,7 @@
     "dev": "npm run dev:api & npm run dev:demo",
     "dev:api": "npm run dev --workspace @ej-ledger/api",
     "dev:demo": "npm run dev --workspace @ej-ledger/demo",
+    "dev:whatsapp": "npm run dev --workspace @ej-ledger/whatsapp",
     "test": "vitest run",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "build": "npm run build --workspaces --if-present"
