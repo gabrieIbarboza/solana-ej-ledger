@@ -2,10 +2,12 @@ export {
   createExpenseHash,
   createPolicyHash,
   createProofMemo,
-  createProofPayload
+  createProofPayload,
+  parseProofMemo
 } from "./proof";
 export type {
   CreateProofPayloadInput,
+  ParsedProofMemo,
   ProofPayload,
   ProofSigner,
   ProofSignerKind,

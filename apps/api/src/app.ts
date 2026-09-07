@@ -6,13 +6,21 @@ import { createProofMemo, createProofPayload } from "@ej-ledger/proof";
 import { expenseSchema, signedTransactionSchema } from "./schemas";
 import { createExplorerUrl, type TransactionBroadcaster } from "./solana";
 import { getPolicy as getPolicyById } from "./policies";
+import { getMembers as getMembersByOrganization } from "./members";
+import {
+  createSolanaProofHistorySource,
+  getOrganizationProofHistory,
+  type ProofHistorySource
+} from "./proof-history";
 
 export interface AppDependencies {
   broadcaster: TransactionBroadcaster;
   getPolicy?: typeof getPolicyById;
+  getMembers?: typeof getMembersByOrganization;
+  proofHistory?: ProofHistorySource;
 }
 
-function jsonError(message: string, status: 400 | 404 | 500) {
+function jsonError(message: string, status: 400 | 403 | 404 | 500) {
   return { error: message, status };
 }
 
@@ -33,7 +41,12 @@ function toExpense(value: z.infer<typeof expenseSchema>): Expense {
   return expense;
 }
 
-export function createApp({ broadcaster, getPolicy = getPolicyById }: AppDependencies) {
+export function createApp({
+  broadcaster,
+  getPolicy = getPolicyById,
+  getMembers = getMembersByOrganization,
+  proofHistory = createSolanaProofHistorySource("https://api.devnet.solana.com")
+}: AppDependencies) {
   const app = new Hono();
 
   app.use("*", cors());
@@ -48,6 +61,33 @@ export function createApp({ broadcaster, getPolicy = getPolicyById }: AppDepende
     }
 
     return c.json(policy);
+  });
+
+  app.get("/v1/organizations/:organizationId/proofs", async (c) => {
+    const organizationId = c.req.param("organizationId");
+    const viewerWallet = c.req.query("viewerWallet")?.trim();
+    const organization = getMembers(organizationId);
+
+    if (!organization) {
+      return c.json(jsonError("organization not found", 404), 404);
+    }
+
+    if (!viewerWallet) {
+      return c.json(jsonError("viewer wallet is required", 400), 400);
+    }
+
+    const isMember = organization.members.some((member) => member.walletAddress === viewerWallet);
+
+    if (!isMember) {
+      return c.json(jsonError("viewer wallet is not a configured organization member", 403), 403);
+    }
+
+    try {
+      const proofs = await getOrganizationProofHistory(organization.members, proofHistory);
+      return c.json({ organizationId, proofs });
+    } catch {
+      return c.json(jsonError("failed to load organization proof history", 500), 500);
+    }
   });
 
   app.post("/v1/expenses/check", async (c) => {

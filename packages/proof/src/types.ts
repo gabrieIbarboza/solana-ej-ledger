@@ -13,6 +13,14 @@ export interface ProofPayload {
   proofHash: string;
 }
 
+export interface ParsedProofMemo {
+  proofHash: string;
+  policyHash: string;
+  expenseHash: string;
+  decision: ComplianceStatus;
+  policyVersion: string;
+}
+
 export interface CreateProofPayloadInput {
   expense: Expense;
   policy: Policy;

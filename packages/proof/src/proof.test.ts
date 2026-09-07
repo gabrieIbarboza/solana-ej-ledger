@@ -5,6 +5,7 @@ import {
   createPolicyHash,
   createProofMemo,
   createProofPayload,
+  parseProofMemo,
   type ProofSigner
 } from ".";
 
@@ -61,6 +62,22 @@ describe("proof utilities", () => {
     expect(memo).not.toContain("Client meeting");
     expect(memo).not.toContain("receipt");
     expect(memo).not.toContain(JSON.stringify(policy));
+  });
+
+  it("parses valid proof memos and rejects malformed data", () => {
+    const payload = createProofPayload({ expense, policy, decision, timestamp: "2026-09-07T00:00:00.000Z" });
+    const memo = createProofMemo(payload);
+
+    expect(parseProofMemo(memo)).toMatchObject({
+      proofHash: payload.proofHash,
+      policyHash: payload.policyHash,
+      expenseHash: payload.expenseHash,
+      decision: "APPROVED",
+      policyVersion: "2026.1"
+    });
+    expect(parseProofMemo(`[${memo.length}] ${memo}`)).toMatchObject({ proofHash: payload.proofHash });
+    expect(parseProofMemo(`${memo}:extra`)).toBeNull();
+    expect(parseProofMemo("EJ_COMPLIANCE:v1:not-a-hash")).toBeNull();
   });
 
   it("allows signer implementations behind the ProofSigner interface", async () => {

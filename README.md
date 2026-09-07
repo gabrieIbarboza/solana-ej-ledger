@@ -117,6 +117,27 @@ curl -s http://localhost:8787/v1/proofs/intent \
 7. Review the displayed transaction summary, then approve the simulated Memo transaction in your wallet.
 8. Open the returned Solana Explorer devnet link.
 
+## Shared Organization Proof History
+
+The demo can list public EJ Ledger proof metadata directly from Solana devnet. Configure the wallets allowed to view the shared organization history in `policies/demo-members.json`:
+
+```json
+{
+  "organizationId": "ej-demo",
+  "members": [
+    {
+      "memberId": "member-001",
+      "displayName": "Demo member",
+      "walletAddress": "YOUR_PUBLIC_WALLET_ADDRESS"
+    }
+  ]
+}
+```
+
+Restart the API after editing the roster. Connect a configured wallet in the demo to view every configured member's successful `EJ_COMPLIANCE:v1` Memo proof, including signer, decision, policy version, time, hashes, confirmation state, and Explorer link.
+
+This is a no-database hackathon feature. The roster creates the off-chain association between a wallet and the EJ; it is not authentication. Amounts, categories, purposes, receipts, and other private expense details cannot be recovered from Solana because the Memo stores hashes only.
+
 ## Privacy
 
 Never put sensitive operational data directly on-chain. The proof memo contains hashes and decision metadata only. Do not include names, phone numbers, receipt contents, full RID documents, raw WhatsApp/Telegram messages, or detailed expense purpose text in the memo.

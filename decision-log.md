@@ -117,3 +117,10 @@
 - Decision: Bind the SDK's configurable fetch implementation to `globalThis` when constructing `ComplianceClient`.
 - Rationale: Chromium's native `window.fetch` throws `Illegal invocation` when called as a detached function. Binding retains the SDK's injectable fetch seam while making the browser demo work.
 - Verification: SDK unit tests, demo typecheck/build, and the root suite passed; the root suite now has 26 tests.
+
+## 2026-09-07 - Shared Organization Proof History Demo
+
+- Decision: Use Solana devnet RPC plus a static `demo-members.json` roster to display shared public proof history without adding a database.
+- Rationale: The Memo has no reversible organization or member identity. The roster maps known public wallet addresses to the EJ, while RPC verifies successful signed transactions and exposes only public memo metadata.
+- Boundary: The history endpoint is a demo-only roster gate, not production authentication. It intentionally excludes private expense data, which cannot be reconstructed from on-chain hashes.
+- Verification: Root tests passed with 30 tests, workspace typechecks passed, demo production build passed, and a read-only devnet RPC smoke test returned the existing `APPROVED` proof for the configured wallet.

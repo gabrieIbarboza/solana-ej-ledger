@@ -1,0 +1,10 @@
+{
+  "organizationId": "ej-demo",
+  "members": [
+    {
+      "memberId": "member-001",
+      "displayName": "Gabriel Barboza",
+      "walletAddress": "H3uFYgtCaTbbHHPtePrHy8o4gXV1YfBZ2wgpVvPCDLgp"
+    }
+  ]
+}

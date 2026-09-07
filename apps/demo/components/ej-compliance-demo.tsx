@@ -1,10 +1,10 @@
 "use client";
 
-import type { ComplianceDecision, Expense, ProofIntent, ProofSubmission } from "@ej-ledger/sdk";
+import type { ComplianceDecision, Expense, OrganizationProofHistory, ProofIntent, ProofSubmission } from "@ej-ledger/sdk";
 import type { WalletConnector } from "@solana/client";
 import { useSolanaClient, useWalletConnection } from "@solana/react-hooks";
-import { AlertCircle, CheckCircle2, Copy, ExternalLink, FileCheck2, Loader2, LogOut, ShieldAlert, Wallet, X } from "lucide-react";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { AlertCircle, CheckCircle2, Copy, ExternalLink, FileCheck2, History, Loader2, LogOut, RefreshCw, ShieldAlert, Wallet, X } from "lucide-react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { complianceClient } from "../lib/client";
 import { type PreparedProofTransaction, WalletStandardProofSigner } from "../lib/wallet-standard-proof-signer";
 
@@ -63,6 +63,17 @@ function truncateAddress(address: string): string {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
 }
 
+function formatOccurredAt(occurredAt: string | null): string {
+  if (occurredAt === null) {
+    return "Time unavailable";
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short"
+  }).format(new Date(occurredAt));
+}
+
 function isSupportedWalletConnector(connector: WalletConnector): boolean {
   const normalizedName = connector.name.toLowerCase();
   return normalizedName.includes("phantom") || normalizedName.includes("solflare");
@@ -105,6 +116,9 @@ export function EjComplianceDemo() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string | null>(null);
   const [isWalletPickerOpen, setIsWalletPickerOpen] = useState(false);
+  const [organizationHistory, setOrganizationHistory] = useState<OrganizationProofHistory | null>(null);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState<string | null>(null);
 
   const expense = useMemo(() => buildExpense(amount, category, purpose), [amount, category, purpose]);
   const proofSigner = useMemo(
@@ -129,9 +143,34 @@ export function EjComplianceDemo() {
     [wallet.connectors]
   );
 
+  const loadOrganizationHistory = useCallback(async () => {
+    if (!walletAddress) {
+      setOrganizationHistory(null);
+      setHistoryError(null);
+      return;
+    }
+
+    setIsHistoryLoading(true);
+    setHistoryError(null);
+
+    try {
+      const history = await complianceClient.getOrganizationProofHistory("ej-demo", walletAddress);
+      setOrganizationHistory(history);
+    } catch (caught) {
+      setOrganizationHistory(null);
+      setHistoryError(getErrorMessage(caught, "Could not load organization proof history."));
+    } finally {
+      setIsHistoryLoading(false);
+    }
+  }, [walletAddress]);
+
   useEffect(() => {
     setPreparedProof(null);
   }, [walletAddress]);
+
+  useEffect(() => {
+    void loadOrganizationHistory();
+  }, [loadOrganizationHistory]);
 
   async function checkCurrentExpense(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
@@ -202,6 +241,7 @@ export function EjComplianceDemo() {
       const submission = await proofSigner.signAndSendPreparedProof(preparedProof);
       setProofSubmission(submission);
       setPreparedProof(null);
+      void loadOrganizationHistory();
     } catch (caught) {
       setError(getErrorMessage(caught, "Could not sign and submit proof."));
     } finally {
@@ -512,6 +552,85 @@ export function EjComplianceDemo() {
                   View transaction
                   <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 </a>
+              )}
+            </section>
+
+            <section className="rounded-lg border bg-card p-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <History className="h-5 w-5" aria-hidden="true" />
+                    <h2 className="text-lg font-semibold">Organization proof history</h2>
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Shared public proof metadata from configured EJ wallets. Demo roster access only.
+                  </p>
+                </div>
+                {walletAddress && (
+                  <button
+                    type="button"
+                    className="inline-flex min-h-9 items-center gap-2 rounded-md border px-3 py-2 text-sm font-medium hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+                    onClick={() => void loadOrganizationHistory()}
+                    disabled={isHistoryLoading}
+                  >
+                    <RefreshCw className={`h-4 w-4 ${isHistoryLoading ? "animate-spin" : ""}`} aria-hidden="true" />
+                    Refresh
+                  </button>
+                )}
+              </div>
+
+              {!walletAddress ? (
+                <p className="mt-4 text-sm text-muted-foreground">Connect a configured EJ wallet to view shared proof history.</p>
+              ) : isHistoryLoading ? (
+                <p className="mt-4 inline-flex items-center gap-2 text-sm text-muted-foreground">
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
+                  Loading Solana devnet proofs
+                </p>
+              ) : historyError ? (
+                <p className="mt-4 text-sm text-destructive">{historyError}</p>
+              ) : organizationHistory?.proofs.length === 0 ? (
+                <p className="mt-4 text-sm text-muted-foreground">No confirmed EJ Ledger memos found for the configured wallets yet.</p>
+              ) : (
+                <ul className="mt-4 space-y-3">
+                  {organizationHistory?.proofs.map((proof) => (
+                    <li key={proof.signature} className="rounded-md border bg-muted/30 p-3 text-sm">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="font-medium">{proof.memberName}</p>
+                          <p className="mt-1 font-mono text-xs text-muted-foreground">{truncateAddress(proof.signerAddress)}</p>
+                        </div>
+                        <span className="rounded-full border bg-background px-2 py-1 text-xs font-semibold">{proof.decision}</span>
+                      </div>
+                      <dl className="mt-3 grid gap-2 text-xs text-muted-foreground">
+                        <div className="flex justify-between gap-3">
+                          <dt>RID</dt>
+                          <dd className="font-medium text-foreground">{proof.policyVersion}</dd>
+                        </div>
+                        <div className="flex justify-between gap-3">
+                          <dt>Confirmed</dt>
+                          <dd className="text-right font-medium text-foreground">{formatOccurredAt(proof.occurredAt)} · {proof.confirmationStatus}</dd>
+                        </div>
+                      </dl>
+                      <details className="mt-3 text-xs">
+                        <summary className="cursor-pointer text-muted-foreground">View proof hashes</summary>
+                        <dl className="mt-2 space-y-1 break-all font-mono text-[11px] text-muted-foreground">
+                          <div><dt className="inline">Proof: </dt><dd className="inline">{proof.proofHash}</dd></div>
+                          <div><dt className="inline">Policy: </dt><dd className="inline">{proof.policyHash}</dd></div>
+                          <div><dt className="inline">Expense: </dt><dd className="inline">{proof.expenseHash}</dd></div>
+                        </dl>
+                      </details>
+                      <a
+                        href={proof.explorerUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-3 inline-flex items-center gap-1 text-xs font-medium underline underline-offset-4"
+                      >
+                        View on Explorer
+                        <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               )}
             </section>
 
