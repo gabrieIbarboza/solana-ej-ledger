@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EJ Ledger — Submissão Hackathon Universitário Superteam</title>
+    <style>
+      :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: #1f2937; background: #f8fafc; }
+      body { margin: 0; }
+      main { max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+      h1 { font-size: 2.25rem; margin: 0 0 8px; color: #312e81; }
+      h2 { margin-top: 42px; color: #312e81; }
+      h3 { margin-bottom: 8px; }
+      .tagline { font-size: 1.2rem; margin-top: 0; }
+      .note { padding: 16px; border-left: 4px solid #f59e0b; background: #fffbeb; }
+      section { padding: 24px; margin-top: 16px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; }
+      .copy { white-space: pre-line; line-height: 1.6; }
+      .placeholder { color: #9a3412; font-weight: 700; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid #e2e8f0; }
+      th { width: 22%; color: #475569; }
+      ul, ol { line-height: 1.65; }
+      .time { color: #6d28d9; font-weight: 700; }
+      @media print { main { max-width: none; padding: 0; } section { break-inside: avoid; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>EJ Ledger</h1>
+      <p class="tagline">O RID executável e auditável para Empresas Juniores.</p>
+      <p><strong>Hackathon Universitário — Superteam Brasil 2026</strong> · Track recomendada: <strong>Vida universitária</strong></p>
+
+      <p class="note"><strong>Antes de enviar:</strong> substitua todos os campos em laranja pelos links e dados reais. A submissão pede vídeo público de até 5 minutos, descrição de até 300 palavras e os dados acadêmicos de cada integrante.</p>
+
+      <h2>Dados para submissão</h2>
+      <section>
+        <table>
+          <tr><th>Projeto</th><td>EJ Ledger</td></tr>
+          <tr><th>Problema</th><td>Empresas Juniores ainda controlam reembolsos com mensagens, planilhas e conferência manual de regras.</td></tr>
+          <tr><th>Track</th><td>Vida universitária</td></tr>
+          <tr><th>Vídeo</th><td><span class="placeholder">[COLE AQUI O LINK PÚBLICO DO YOUTUBE]</span></td></tr>
+          <tr><th>Repositório</th><td><span class="placeholder">[COLE AQUI O LINK PÚBLICO DO GITHUB]</span></td></tr>
+          <tr><th>Demo</th><td>MVP local + Solana devnet. O vídeo mostra a demonstração funcional.</td></tr>
+          <tr><th>Equipe</th><td>Gabriel Barboza — Desenvolvimento<br />Uara Sales — Negócios</td></tr>
+          <tr><th>Dados exigidos</th><td><span class="placeholder">[ADICIONAR instituição, curso e vínculo de Gabriel e Uara]</span></td></tr>
+        </table>
+      </section>
+
+      <h2>Descrição para colar no Superteam Earn</h2>
+      <section>
+        <p class="copy">Empresas Juniores têm regras internas de despesas, mas o reembolso ainda costuma depender de mensagens no WhatsApp, planilhas e checagem manual. Para um estudante, é difícil saber antes se uma despesa será aceita. Para quem administra, é difícil manter uma trilha clara de decisões e comprovantes.
+
+O EJ Ledger transforma o RID — Regulamento Interno de Despesas — em regras digitais versionadas. Quando um aluno descreve uma despesa, nossa API e SDK retornam uma decisão objetiva: aprovada, bloqueada ou pendente de aprovação. O mesmo núcleo pode ser usado por um site, WhatsApp, Telegram ou outro canal; o bot apenas conversa com o aluno e nunca decide a regra por conta própria.
+
+No MVP, o aluno confirma os dados da despesa, recebe a decisão e, se ela for aprovada, anexa o comprovante. O sistema cria uma prova na Solana devnet com hashes da política, da despesa e do comprovante. Nenhum dado sensível — valores, finalidade, conversa ou arquivo — vai para a blockchain. O histórico compartilhado mostra as provas públicas da organização; uma futura camada de banco de dados conectará esses hashes aos documentos e relatórios off-chain autorizados.
+
+Usamos Solana porque a prova tem baixo custo e pode ser verificada de forma independente, vinculada à versão exata da regra aplicada. Não usamos blockchain para substituir o RID nem para fazer transferência de dinheiro: usamos como camada de evidência auditável para uma realidade universitária brasileira. O MVP já possui interface web, integração de carteira, API/SDK e bot de WhatsApp em ambiente de demonstração.</p>
+        <p><strong>Contagem aproximada:</strong> 225 palavras.</p>
+      </section>
+
+      <h2>Roteiro de vídeo — até 5 minutos</h2>
+      <section>
+        <h3><span class="time">0:00–0:55</span> — O problema</h3>
+        <p>“Imagine fazer parte de uma Empresa Júnior. Você gastou dinheiro para atender um cliente, mas não sabe se o reembolso será aceito. Hoje, a resposta pode estar espalhada entre um RID em PDF, mensagens no WhatsApp e uma planilha. Quem solicita espera; quem administra precisa interpretar a mesma regra várias vezes.”</p>
+        <p>“Nós vivemos esse contexto universitário. O EJ Ledger nasce para tornar essa decisão mais clara antes do reembolso acontecer.”</p>
+
+        <h3><span class="time">0:55–1:40</span> — A solução em linguagem simples</h3>
+        <p>“O EJ Ledger pega o RID da organização e o transforma em regras digitais versionadas. Assim, uma despesa não depende de uma interpretação improvisada: ela recebe uma decisão objetiva — aprovada, bloqueada ou pendente de aprovação.”</p>
+        <p>Mostre um slide simples: <strong>RID → regras versionadas → API/SDK → site, WhatsApp e futuros canais</strong>.</p>
+        <p>“O ponto importante é que o bot não inventa regras. Ele entende a mensagem e consulta o mesmo SDK usado pelo site.”</p>
+
+        <h3><span class="time">1:40–3:25</span> — Demonstração real</h3>
+        <ol>
+          <li>Mostre o WhatsApp: envie “Gastei R$70 de transporte para falar com cliente”.</li>
+          <li>Mostre o bot repetindo valor, categoria e finalidade. Diga: “O aluno confirma o que o bot entendeu.”</li>
+          <li>Responda <strong>CONFIRMAR</strong> e mostre a decisão aprovada pelo RID.</li>
+          <li>Mostre o pedido de comprovante e anexe um arquivo de teste.</li>
+          <li>Mostre a resposta de sucesso e abra o link da transação no Solana Explorer devnet.</li>
+        </ol>
+        <p>“Não houve transferência de SOL. O que registramos é uma prova: hashes da regra aplicada, da despesa e do comprovante. Os dados privados continuam fora da blockchain.”</p>
+
+        <h3><span class="time">3:25–4:10</span> — Histórico e privacidade</h3>
+        <p>Envie <strong>HISTÓRICO</strong> ou mostre o painel web de histórico. “A equipe vê as provas públicas da organização. Nesta POC, mostramos hashes e links do Explorer. Em seguida, conectaremos um banco de dados para recuperar, com autorização, os documentos e relatórios off-chain.”</p>
+
+        <h3><span class="time">4:10–4:40</span> — Por que Solana</h3>
+        <p>“A Solana é a camada de evidência: barata, rápida e verificável por qualquer pessoa. Ela permite provar qual versão do RID gerou aquela decisão sem publicar comprovantes, conversas ou dados pessoais.”</p>
+
+        <h3><span class="time">4:40–5:00</span> — Time e próximos passos</h3>
+        <p>“Somos Gabriel Barboza, desenvolvimento, e Uara Sales, negócios. Nosso próximo passo é conversar com Empresas Juniores, converter RIDs reais em regras e integrar relatórios off-chain. EJ Ledger: menos burocracia para estudantes, mais clareza para a organização.”</p>
+      </section>
+
+      <h2>Checklist de gravação e envio</h2>
+      <section>
+        <ul>
+          <li>Gravar em português, com no máximo 5 minutos; cortar carregamentos e erros.</li>
+          <li>Abrir com o problema, não com apresentação pessoal.</li>
+          <li>Mostrar uma prova real no Explorer devnet e deixar explícito que não há transferência de dinheiro.</li>
+          <li>Se o fluxo ao vivo falhar, usar gravação de tela do fluxo funcionando; não improvisar.</li>
+          <li>Publicar o vídeo como não listado no YouTube e confirmar que abre em janela anônima.</li>
+          <li>Garantir que o repositório seja público e que o README contenha os passos de execução.</li>
+          <li>Preencher nome completo, instituição, curso e vínculo de cada pessoa no formulário.</li>
+        </ul>
+      </section>
+
+      <h2>Declaração de uso de IA</h2>
+      <section>
+        <p>Usamos ChatGPT como apoio para organizar o plano de implementação, revisar textos técnicos, estruturar a documentação e preparar este roteiro de pitch. A definição do problema, as decisões de produto, o desenvolvimento, os testes e a apresentação são responsabilidade da equipe.</p>
+      </section>
+    </main>
+  </body>
+</html>
