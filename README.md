@@ -5,6 +5,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![Solana](https://img.shields.io/badge/Solana-Devnet-9945FF?logo=solana&logoColor=white)](https://solana.com/developers)
+[![Helius](https://img.shields.io/badge/Helius-Devnet_RPC-FF6B00)](https://www.helius.dev/)
 [![Hono](https://img.shields.io/badge/Hono-API-E36002?logo=hono&logoColor=white)](https://hono.dev/)
 [![Twilio](https://img.shields.io/badge/Twilio-WhatsApp_Sandbox-F22F46?logo=twilio&logoColor=white)](https://www.twilio.com/docs/whatsapp/sandbox)
 [![Vitest](https://img.shields.io/badge/Vitest-Tested-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
@@ -32,17 +33,26 @@ flowchart LR
     FUTURE_CHANNELS["Telegram and other adapters"]:::future
   end
 
-  WEB --> SDK["ComplianceClient SDK"]:::current
-  WHATSAPP --> SDK
+  subgraph SDK_LAYER["EJ Ledger SDK layer"]
+    direction TB
+    SDK["ComplianceClient SDK\nall backend calls"]:::current
+    WALLET["UserWalletProofSigner\nWallet Standard: Phantom or Solflare"]:::current
+    BOT_SIGNER["ServerKeypairProofSigner\nWhatsApp devnet signer"]:::current
+  end
+
+  WEB -->|"expense, proof, and history"| SDK
+  WHATSAPP -->|"expense, proof, and history"| SDK
   FUTURE_CHANNELS -.-> SDK
-  SDK --> API
+  WEB -->|"wallet connection"| WALLET
+  WHATSAPP -->|"server signing"| BOT_SIGNER
+  SDK -->|"every backend request"| API
   API --> CORE["Pure Compliance Core"]:::current
   API --> PROOF["Proof utilities\npayload and Memo"]:::current
 
-  WEB --- WALLET["Wallet Standard signer\nPhantom or Solflare"]:::current
-  WHATSAPP --- BOT_SIGNER["Devnet server signer"]:::current
-  WALLET -->|"signed Memo transaction"| API
-  BOT_SIGNER -->|"signed Memo transaction"| API
+  SDK -->|"proof intent"| WALLET
+  SDK -->|"proof intent"| BOT_SIGNER
+  WALLET -->|"signed Memo transaction"| SDK
+  BOT_SIGNER -->|"signed Memo transaction"| SDK
 
   API -->|"broadcast proofs and read history"| RPC["Helius or public Devnet RPC"]:::current
   RPC --> SOLANA["Solana Devnet\nMemo proofs and public history"]:::current
@@ -55,6 +65,8 @@ flowchart LR
 ```
 
 **Legend:** solid nodes and arrows are built in the MVP. Dashed nodes and arrows are the next evolution of the platform.
+
+Every request that leaves the web demo or a bot — compliance decision, proof intent, signed transaction submission, or proof history — goes through `ComplianceClient SDK` before reaching the API. The signer adapters only sign proof input and return the signed transaction to the SDK; they do not contain compliance rules.
 
 The Compliance Core is pure business logic. It does not import HTTP, Solana, Helius, wallets, filesystem APIs, UI code, WhatsApp, or Telegram.
 
