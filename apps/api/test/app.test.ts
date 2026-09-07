@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Policy } from "@ej-ledger/core";
 import { createApp } from "../src/app";
+import type { ObservedProofTransaction, ProofHistorySource } from "../src/proof-history";
 
 const signedTransaction = "AQIDBA==";
 
@@ -23,12 +24,28 @@ const baseExpense = {
   purpose: "Client meeting"
 };
 
-function appWithPolicy(overrides?: { sendRawTransaction?: (tx: string) => Promise<string> }) {
+const member = {
+  memberId: "member-001",
+  displayName: "Gabriel Barboza",
+  walletAddress: "H3uFYgtCaTbbHHPtePrHy8o4gXV1YfBZ2wgpVvPCDLgp"
+};
+
+const members = {
+  organizationId: "ej-demo",
+  members: [member]
+};
+
+function appWithPolicy(overrides?: {
+  sendRawTransaction?: (tx: string) => Promise<string>;
+  proofHistory?: ProofHistorySource;
+}) {
   return createApp({
     broadcaster: {
       sendRawTransaction: overrides?.sendRawTransaction ?? vi.fn(async () => "mock-signature")
     },
-    getPolicy: (organizationId) => (organizationId === policy.organizationId ? policy : undefined)
+    getPolicy: (organizationId) => (organizationId === policy.organizationId ? policy : undefined),
+    getMembers: (organizationId) => (organizationId === members.organizationId ? members : undefined),
+    proofHistory: overrides?.proofHistory ?? { getTransactions: vi.fn(async () => []) }
   });
 }
 
@@ -38,6 +55,35 @@ describe("api", () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ organizationId: "ej-demo" });
+  });
+
+  it("returns shared proof history only to a configured roster wallet", async () => {
+    const proofHistory: ProofHistorySource = {
+      getTransactions: vi.fn(async (): Promise<ObservedProofTransaction[]> => [
+        {
+          signature: "proof-signature",
+          memo: `EJ_COMPLIANCE:v1:${"a".repeat(64)}:${"b".repeat(64)}:${"c".repeat(64)}:APPROVED:2026.1`,
+          blockTime: 1_700_000_000,
+          confirmationStatus: "confirmed",
+          succeeded: true,
+          memoVerified: true,
+          signerAddresses: [member.walletAddress]
+        }
+      ])
+    };
+    const app = appWithPolicy({ proofHistory });
+    const response = await app.request(
+      `/v1/organizations/ej-demo/proofs?viewerWallet=${member.walletAddress}`
+    );
+    const forbidden = await app.request("/v1/organizations/ej-demo/proofs?viewerWallet=unknown-wallet");
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      organizationId: "ej-demo",
+      proofs: [{ signature: "proof-signature", memberName: "Gabriel Barboza", decision: "APPROVED" }]
+    });
+    expect(forbidden.status).toBe(403);
+    expect(proofHistory.getTransactions).toHaveBeenCalledWith(member.walletAddress);
   });
 
   it("returns correct decisions for the PRD scenarios", async () => {

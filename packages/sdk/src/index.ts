@@ -4,6 +4,9 @@ export {
 } from "./client";
 export type {
   ComplianceClientConfig,
+  OrganizationProofHistory,
+  OrganizationProofHistoryItem,
+  ProofConfirmationStatus,
   ProofIntent,
   ProofSubmitResult
 } from "./client";

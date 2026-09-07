@@ -64,6 +64,22 @@ describe("ComplianceClient", () => {
     await expect(client.submitSignedProofTransaction("AQID")).resolves.toMatchObject({ signature: "sig" });
   });
 
+  it("fetches shared organization proof history for a configured viewer wallet", async () => {
+    const fetcher = vi.fn(async () => response({
+      organizationId: "ej-demo",
+      proofs: [{ signature: "proof-signature", decision: "APPROVED" }]
+    }));
+    const client = new ComplianceClient({ baseUrl: "http://localhost:8787", fetcher });
+
+    await expect(
+      client.getOrganizationProofHistory("ej-demo", "H3uFYgtCaTbbHHPtePrHy8o4gXV1YfBZ2wgpVvPCDLgp")
+    ).resolves.toMatchObject({ proofs: [{ signature: "proof-signature", decision: "APPROVED" }] });
+    expect(fetcher).toHaveBeenCalledWith(
+      "http://localhost:8787/v1/organizations/ej-demo/proofs?viewerWallet=H3uFYgtCaTbbHHPtePrHy8o4gXV1YfBZ2wgpVvPCDLgp",
+      expect.any(Object)
+    );
+  });
+
   it("normalizes API errors", async () => {
     const fetcher = vi.fn(async () => response({ error: "policy not found" }, 404));
     const client = new ComplianceClient({ baseUrl: "http://localhost:8787", fetcher });

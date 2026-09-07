@@ -19,6 +19,28 @@ export interface ProofSubmitResult {
   submittedAt: string;
 }
 
+export type ProofConfirmationStatus = "confirmed" | "finalized" | "unknown";
+
+export interface OrganizationProofHistoryItem {
+  memberId: string;
+  memberName: string;
+  signerAddress: string;
+  signature: string;
+  explorerUrl: string;
+  occurredAt: string | null;
+  confirmationStatus: ProofConfirmationStatus;
+  decision: ComplianceDecision["decision"];
+  policyVersion: string;
+  proofHash: string;
+  policyHash: string;
+  expenseHash: string;
+}
+
+export interface OrganizationProofHistory {
+  organizationId: string;
+  proofs: OrganizationProofHistoryItem[];
+}
+
 export class ComplianceClientError extends Error {
   readonly status: number;
 
@@ -61,6 +83,16 @@ export class ComplianceClient {
       method: "POST",
       body: JSON.stringify({ signedTransaction })
     });
+  }
+
+  async getOrganizationProofHistory(
+    organizationId: string,
+    viewerWallet: string
+  ): Promise<OrganizationProofHistory> {
+    const query = new URLSearchParams({ viewerWallet });
+    return this.request<OrganizationProofHistory>(
+      `/v1/organizations/${encodeURIComponent(organizationId)}/proofs?${query.toString()}`
+    );
   }
 
   private async request<T>(path: string, init: RequestInit = {}): Promise<T> {
