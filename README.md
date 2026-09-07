@@ -1,18 +1,94 @@
 # EJ Ledger
 
-Executable expense compliance for Junior Enterprises.
+*Turn internal expense policies into clear, verifiable decisions.*
 
-This MVP turns a structured RID policy into deterministic expense decisions and optional wallet-signed Solana devnet proof.
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![Solana](https://img.shields.io/badge/Solana-Devnet-9945FF?logo=solana&logoColor=white)](https://solana.com/developers)
+[![Hono](https://img.shields.io/badge/Hono-API-E36002?logo=hono&logoColor=white)](https://hono.dev/)
+[![Twilio](https://img.shields.io/badge/Twilio-WhatsApp_Sandbox-F22F46?logo=twilio&logoColor=white)](https://www.twilio.com/docs/whatsapp/sandbox)
+[![Vitest](https://img.shields.io/badge/Vitest-Tested-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
+
+<p align="center">
+  <img src="public/ej-ledger-banner.png" alt="EJ Ledger — simple for students, auditable for organizations" width="1000" />
+</p>
+
+EJ Ledger turns a structured RID policy into deterministic expense decisions and privacy-preserving Solana devnet proofs for Junior Enterprises.
 
 ## Architecture
 
-```text
-RID JSON -> Compliance Core -> API -> SDK -> Demo UI -> Wallet Standard-signed Memo proof
+> A versioned RID policy powers the Compliance Core; the API and SDK deliver its decisions to web and WhatsApp, while Solana is the verifiable proof layer that anchors approved expense records to the EJ Ledger ecosystem.
+
+```mermaid
+flowchart LR
+  classDef current fill:#EEF2FF,stroke:#4F46E5,color:#1F2937;
+  classDef future fill:#F8FAFC,stroke:#64748B,stroke-dasharray: 5 5,color:#334155;
+
+  RID["Versioned RID JSON\npolicy"]:::current --> API["EJ Ledger API"]:::current
+
+  subgraph Channels["User experiences"]
+    WEB["Next.js web demo"]:::current
+    WHATSAPP["Twilio WhatsApp bot"]:::current
+    FUTURE_CHANNELS["Telegram and other adapters"]:::future
+  end
+
+  WEB --> SDK["ComplianceClient SDK"]:::current
+  WHATSAPP --> SDK
+  FUTURE_CHANNELS -.-> SDK
+  SDK --> API
+  API --> CORE["Pure Compliance Core"]:::current
+  API --> PROOF["Proof utilities\npayload and Memo"]:::current
+
+  WEB --- WALLET["Wallet Standard signer\nPhantom or Solflare"]:::current
+  WHATSAPP --- BOT_SIGNER["Devnet server signer"]:::current
+  WALLET -->|"signed Memo transaction"| API
+  BOT_SIGNER -->|"signed Memo transaction"| API
+
+  API -->|"broadcast proofs and read history"| RPC["Helius or public Devnet RPC"]:::current
+  RPC --> SOLANA["Solana Devnet\nMemo proofs and public history"]:::current
+
+  SOLANA -.-> HELIUS_INDEX["Helius indexing and monitoring"]:::future
+  API -.-> REPORTS["Off-chain reports and database"]:::future
+  API -.-> TREASURY["Treasury adapter"]:::future
+  TREASURY -.-> SQUADS["Squads shared treasury"]:::future
+  SQUADS -.-> SOLANA
 ```
+
+**Legend:** solid nodes and arrows are built in the MVP. Dashed nodes and arrows are the next evolution of the platform.
 
 The Compliance Core is pure business logic. It does not import HTTP, Solana, Helius, wallets, filesystem APIs, UI code, WhatsApp, or Telegram.
 
 The Solana boundary uses current Solana defaults: the browser demo discovers Phantom and Solflare through Wallet Standard-compatible connectors, while the API broadcasts signed base64 wire transactions through `@solana/kit` RPC.
+
+## What EJ Ledger does
+
+Junior Enterprise members should not need to interpret a PDF policy or wait for a manual answer before knowing whether an expense follows the RID. EJ Ledger makes those rules executable, gives every interface the same deterministic decision, and creates a verifiable proof when an approved expense is recorded.
+
+## How it works
+
+1. **Policy:** an EJ structures and versions its RID rules as policy JSON.
+2. **Decision:** the web demo or WhatsApp bot sends an expense through the SDK; the API asks the Compliance Core whether it is approved, blocked, or needs approval.
+3. **Proof:** for an approved test request, the system creates a Solana Memo proof containing hashes and decision metadata, never the raw receipt, purpose, or conversation.
+4. **History:** configured organization members can view the public proof metadata and hashes; private evidence stays off-chain.
+
+## Built now and next
+
+| Built in the MVP | Next evolution |
+| --- | --- |
+| Versioned RID policies, pure Compliance Core, API, TypeScript SDK, web demo, Phantom/Solflare signing, WhatsApp Sandbox, Solana devnet Memo proofs, and shared proof history. | Telegram and other adapters, Helius indexing and monitoring, persistent off-chain reports, real authorization, and Squads shared-treasury execution. |
+
+Helius is optional current RPC infrastructure for broadcasting proofs and reading history; advanced indexing and monitoring are planned improvements. Squads is not implemented in this MVP: it will control shared treasury execution after the Compliance Core has made a policy decision.
+
+## Repository map
+
+| Area | Responsibility |
+| --- | --- |
+| `packages/core` | Pure RID policy decisions; no HTTP, UI, wallet, or Solana dependency. |
+| `packages/sdk` | Typed client used by every frontend or bot. |
+| `packages/proof` | Deterministic hashes, Memo payloads, and signer interfaces. |
+| `apps/api` | HTTP boundary, policy loading, proof intents, transaction broadcast, and proof history. |
+| `apps/demo` | Next.js demo with Wallet Standard-compatible Phantom and Solflare connections. |
+| `apps/whatsapp` | Twilio Sandbox adapter that translates Portuguese conversation into SDK calls. |
 
 ## Setup
 
