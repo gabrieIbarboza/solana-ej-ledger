@@ -142,6 +142,18 @@ describe("api", () => {
     expect(body.payload.proofHash).toHaveLength(64);
   });
 
+  it("creates a v2 proof intent when a valid receipt hash is supplied", async () => {
+    const response = await appWithPolicy().request("/v1/proofs/intent", {
+      method: "POST",
+      body: JSON.stringify({ ...baseExpense, receiptHash: "a".repeat(64) }),
+      headers: { "content-type": "application/json" }
+    });
+    const body = await response.json();
+
+    expect(body.memo).toMatch(/^EJ_COMPLIANCE:v2:/);
+    expect(body.payload).toMatchObject({ receiptHash: "a".repeat(64) });
+  });
+
   it("validates signed transaction shape before RPC submission", async () => {
     const sendRawTransaction = vi.fn(async () => "mock-signature");
     const response = await appWithPolicy({ sendRawTransaction }).request("/v1/proofs/submit", {

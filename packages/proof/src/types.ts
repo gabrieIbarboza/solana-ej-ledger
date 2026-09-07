@@ -8,6 +8,7 @@ export interface ProofPayload {
   policyVersion: string;
   policyHash: string;
   expenseHash: string;
+  receiptHash?: string;
   decision: ComplianceStatus;
   timestamp: string;
   proofHash: string;
@@ -17,6 +18,7 @@ export interface ParsedProofMemo {
   proofHash: string;
   policyHash: string;
   expenseHash: string;
+  receiptHash?: string;
   decision: ComplianceStatus;
   policyVersion: string;
 }
@@ -25,6 +27,7 @@ export interface CreateProofPayloadInput {
   expense: Expense;
   policy: Policy;
   decision: ComplianceDecision;
+  receiptHash?: string;
   timestamp?: string;
 }
 

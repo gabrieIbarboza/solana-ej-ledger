@@ -142,6 +142,19 @@ This is a no-database hackathon feature. The roster creates the off-chain associ
 
 Never put sensitive operational data directly on-chain. The proof memo contains hashes and decision metadata only. Do not include names, phone numbers, receipt contents, full RID documents, raw WhatsApp/Telegram messages, or detailed expense purpose text in the memo.
 
+## WhatsApp Sandbox Bot
+
+The WhatsApp adapter is a Twilio Sandbox-only MVP. It translates Portuguese messages into SDK calls; it has no compliance rules of its own.
+
+1. Copy `apps/whatsapp/.env.example` to `apps/whatsapp/.env.local` and configure Twilio, OpenAI, API, devnet RPC, and the allowed test number.
+2. Start the API with `npm run dev:api` and the bot with `npm run dev:whatsapp`.
+3. Expose `http://localhost:8788` with a public HTTPS tunnel and set `<public-url>/webhooks/twilio/whatsapp` as the Twilio Sandbox incoming-message webhook.
+4. Join the Sandbox from your personal WhatsApp, then send: `Gastei R$70 de transporte para falar com cliente`.
+5. Reply `CONFIRMAR`, then `SOLICITAR AGORA`, attach a PDF/JPEG/PNG up to 5 MB, and reply `CONFIRMAR PROOF` after reviewing the devnet-only transaction summary.
+6. Send `HISTÓRICO` to receive the ten most recent public proof rows.
+
+The bot hashes a receipt in memory and immediately discards the file. Only that hash is committed in an `EJ_COMPLIANCE:v2` Memo; receipts, phone numbers, and conversation text are never sent on-chain. The server signer pays devnet fees and signs the bot proof, so it is not a student-wallet signature. Add its public address to `policies/demo-members.json` before testing history.
+
 ## Demo Pitch
 
 Every EJ has a RID, but members still ask finance whether an expense is allowed. EJ Ledger turns the RID into executable infrastructure: an API and SDK that return a deterministic compliance decision. The demo then signs a Solana devnet memo with Phantom or Solflare to prove that the decision existed under a specific policy version. Future adapters can connect the same Core to WhatsApp, Telegram, or Squads without changing compliance logic.

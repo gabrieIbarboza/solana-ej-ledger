@@ -3,7 +3,7 @@ import { cors } from "hono/cors";
 import { z } from "zod";
 import { checkExpense, ExpenseValidationError, type Expense } from "@ej-ledger/core";
 import { createProofMemo, createProofPayload } from "@ej-ledger/proof";
-import { expenseSchema, signedTransactionSchema } from "./schemas";
+import { expenseSchema, proofIntentSchema, signedTransactionSchema } from "./schemas";
 import { createExplorerUrl, type TransactionBroadcaster } from "./solana";
 import { getPolicy as getPolicyById } from "./policies";
 import { getMembers as getMembersByOrganization } from "./members";
@@ -115,7 +115,7 @@ export function createApp({
   });
 
   app.post("/v1/proofs/intent", async (c) => {
-    const parsed = expenseSchema.safeParse(await c.req.json().catch(() => undefined));
+    const parsed = proofIntentSchema.safeParse(await c.req.json().catch(() => undefined));
 
     if (!parsed.success) {
       return c.json(jsonError("invalid expense request", 400), 400);
@@ -129,7 +129,12 @@ export function createApp({
     }
 
     const decision = checkExpense({ expense, policy });
-    const payload = createProofPayload({ expense, policy, decision });
+    const payload = createProofPayload({
+      expense,
+      policy,
+      decision,
+      ...(parsed.data.receiptHash === undefined ? {} : { receiptHash: parsed.data.receiptHash })
+    });
     const memo = createProofMemo(payload);
 
     return c.json({ payload, memo, decision, cluster: "devnet" });

@@ -80,6 +80,16 @@ describe("proof utilities", () => {
     expect(parseProofMemo("EJ_COMPLIANCE:v1:not-a-hash")).toBeNull();
   });
 
+  it("creates a v2 memo when a receipt hash is provided", () => {
+    const receiptHash = "a".repeat(64);
+    const payload = createProofPayload({ expense, policy, decision, receiptHash, timestamp: "2026-09-07T00:00:00.000Z" });
+    const memo = createProofMemo(payload);
+
+    expect(memo).toMatch(/^EJ_COMPLIANCE:v2:/);
+    expect(parseProofMemo(memo)).toMatchObject({ receiptHash, proofHash: payload.proofHash });
+    expect(payload.proofHash).not.toBe(createProofPayload({ expense, policy, decision, timestamp: "2026-09-07T00:00:00.000Z" }).proofHash);
+  });
+
   it("allows signer implementations behind the ProofSigner interface", async () => {
     const mockSigner: ProofSigner = {
       kind: "user-wallet",

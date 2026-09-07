@@ -5,6 +5,11 @@
       "memberId": "member-001",
       "displayName": "Gabriel Barboza",
       "walletAddress": "H3uFYgtCaTbbHHPtePrHy8o4gXV1YfBZ2wgpVvPCDLgp"
+    },
+    {
+      "memberId": "whatsapp-bot",
+      "displayName": "WhatsApp bot",
+      "walletAddress": "6QJJZPQge75P2esJ5Cq8DRguapfpbW3V8hUygZjF7Zy7"
     }
   ]
 }
