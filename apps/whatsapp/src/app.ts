@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { validateRequest } from "twilio";
+import twilio from "twilio";
 import type { WhatsAppComplianceBot } from "./bot";
 
 export interface WhatsAppAppConfig {
@@ -16,7 +16,7 @@ export function createWhatsAppApp(config: WhatsAppAppConfig, bot: WhatsAppCompli
     const form = await c.req.parseBody();
     const params = Object.fromEntries(Object.entries(form).map(([key, value]) => [key, String(value)]));
     const signature = c.req.header("X-Twilio-Signature") ?? "";
-    if (!validateRequest(config.authToken, signature, config.publicWebhookUrl, params)) return c.text("forbidden", 403);
+    if (!twilio.validateRequest(config.authToken, signature, config.publicWebhookUrl, params)) return c.text("forbidden", 403);
     if (params.From !== config.allowedFrom) return c.text("forbidden", 403);
     const sender = params.From;
     const messageSid = params.MessageSid;

@@ -3,9 +3,9 @@ import { z } from "zod";
 
 export const expenseExtractionSchema = z.object({
   intent: z.enum(["expense", "history", "help", "cancel"]),
-  amount: z.number().positive().optional(),
-  category: z.string().min(1).optional(),
-  purpose: z.string().min(1).optional()
+  amount: z.number().positive().nullable(),
+  category: z.string().min(1).nullable(),
+  purpose: z.string().min(1).nullable()
 });
 
 export type ExpenseExtraction = z.infer<typeof expenseExtractionSchema>;
@@ -31,11 +31,11 @@ export class OpenAIExpenseExtractor implements ExpenseExtractor {
             additionalProperties: false,
             properties: {
               intent: { type: "string", enum: ["expense", "history", "help", "cancel"] },
-              amount: { type: "number" },
-              category: { type: "string" },
-              purpose: { type: "string" }
+              amount: { type: ["number", "null"] },
+              category: { type: ["string", "null"] },
+              purpose: { type: ["string", "null"] }
             },
-            required: ["intent"]
+            required: ["intent", "amount", "category", "purpose"]
           }
         }
       }
