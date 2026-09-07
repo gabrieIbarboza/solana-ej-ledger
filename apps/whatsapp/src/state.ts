@@ -1,10 +1,8 @@
-import type { ComplianceDecision, Expense } from "@ej-ledger/core";
+import type { Expense } from "@ej-ledger/core";
 
 export type ConversationState =
   | { kind: "awaiting-confirmation"; expense: Expense }
-  | { kind: "awaiting-request"; expense: Expense; decision: ComplianceDecision }
-  | { kind: "awaiting-receipt"; expense: Expense; decision: ComplianceDecision }
-  | { kind: "awaiting-proof-confirmation"; expense: Expense; decision: ComplianceDecision; receiptHash: string };
+  | { kind: "awaiting-receipt"; expense: Expense };
 
 export class SessionStore {
   private readonly sessions = new Map<string, { expiresAt: number; state: ConversationState }>();

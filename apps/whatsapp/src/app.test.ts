@@ -29,4 +29,12 @@ describe("Twilio WhatsApp webhook", () => {
     await expect(request(app, body)).resolves.toMatchObject({ status: 403 });
     expect(handle).not.toHaveBeenCalled();
   });
+
+  it("renders a multi-part bot reply as separate TwiML messages", async () => {
+    const handle = vi.fn(async () => ["primeira parte", "segunda parte"]);
+    const app = createWhatsAppApp({ authToken, allowedFrom: params.From, publicWebhookUrl: url }, { handle } as never);
+
+    const response = await request(app);
+    await expect(response.text()).resolves.toBe("<Response><Message>primeira parte</Message><Message>segunda parte</Message></Response>");
+  });
 });

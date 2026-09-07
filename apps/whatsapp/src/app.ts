@@ -30,7 +30,9 @@ export function createWhatsAppApp(config: WhatsAppAppConfig, bot: WhatsAppCompli
         ? { media: { url: params.MediaUrl0, contentType: params.MediaContentType0 } }
         : {})
     });
-    return c.text(`<Response><Message>${escapeXml(reply)}</Message></Response>`, 200, { "content-type": "text/xml" });
+    const messages = Array.isArray(reply) ? reply : [reply];
+    const twimlMessages = messages.map((message) => `<Message>${escapeXml(message)}</Message>`).join("");
+    return c.text(`<Response>${twimlMessages}</Response>`, 200, { "content-type": "text/xml" });
   });
 
   return app;
