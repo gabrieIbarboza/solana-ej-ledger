@@ -5,13 +5,15 @@ import type { ExpenseExtractor } from "./extractor";
 import { SessionStore, type ConversationState } from "./state";
 
 const MAX_RECEIPT_BYTES = 5 * 1024 * 1024;
+const MAX_TWILIO_MESSAGE_CHARACTERS = 1_500;
 const ACCEPTED_RECEIPT_TYPES = new Set(["application/pdf", "image/jpeg", "image/png"]);
-const HISTORY_NOTICE = "⚠️ POC: por enquanto, o histórico mostra apenas hashes públicos on-chain. Ainda não há banco de dados para exibir detalhes off-chain.";
+const HISTORY_NOTICE = "⚠️ POC: por enquanto, o histórico mostra apenas hashes públicos on-chain. Ainda não há banco de dados para exibir detalhes off-chain. \n\n Saldo Atual da EJ: R$ 1350,00";
 const WELCOME_MESSAGE = [
-  "Olá! Sou o bot do EJ Ledger.",
-  "Posso verificar se uma despesa segue a RID, confirmar uma solicitação de teste com comprovante e mostrar o histórico público da EJ.",
-  "Exemplo: Gastei R$70 de transporte para falar com cliente.",
-  "Envie HISTÓRICO para consultar as transações da EJ."
+  "Olá! Sou o bot do EJ Ledger 💜🤖",
+  "\nPosso verificar se uma despesa segue o RID (Requerimento Interno de Despesas), confirmar uma solicitação de teste com comprovante e mostrar o histórico público da EJ.",
+  "Exemplos: ",
+  "* Gastei R$70 de transporte para falar com cliente.",
+  "* Envie HISTÓRICO para consultar as transações da EJ."
 ].join("\n");
 
 export interface IncomingMessage {
@@ -30,6 +32,8 @@ export interface ReceiptDownloader {
   download(url: string): Promise<Uint8Array>;
 }
 
+export type BotReply = string | string[];
+
 function command(value: string): string {
   return value.trim().normalize("NFD").replace(/\p{Diacritic}/gu, "").toUpperCase();
 }
@@ -43,6 +47,22 @@ function formatOccurredAt(occurredAt: string | null): string {
   return new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short", timeZone: "America/Sao_Paulo" }).format(new Date(occurredAt));
 }
 
+function splitHistoryMessages(entries: string[]): string[] {
+  const messages = [HISTORY_NOTICE];
+
+  for (const entry of entries) {
+    const current = messages.at(-1) ?? HISTORY_NOTICE;
+    const combined = `${current}\n\n${entry}`;
+    if (combined.length <= MAX_TWILIO_MESSAGE_CHARACTERS) {
+      messages[messages.length - 1] = combined;
+    } else {
+      messages.push(entry);
+    }
+  }
+
+  return messages;
+}
+
 export class WhatsAppComplianceBot {
   constructor(
     private readonly config: WhatsAppBotConfig,
@@ -53,7 +73,7 @@ export class WhatsAppComplianceBot {
     private readonly sessions = new SessionStore()
   ) {}
 
-  async handle(message: IncomingMessage): Promise<string> {
+  async handle(message: IncomingMessage): Promise<BotReply> {
     const value = command(message.body);
     if (value === "CANCELAR") {
       this.sessions.clear(message.sender);
@@ -103,19 +123,19 @@ export class WhatsAppComplianceBot {
       const intent = await this.sdk.createProofIntent(state.expense, { receiptHash });
       const submission = await this.signer.signAndSendProof({ payload: intent.payload, memo: intent.memo, cluster: intent.cluster });
       this.sessions.clear(sender);
-      return `✅ Solicitação confirmada para teste.\nO comprovante foi descartado após gerar seu hash e nenhuma transferência de SOL foi realizada.\nVeja a transação: ${submission.explorerUrl}`;
+      return `✅ Solicitação confirmada para teste.\n\nVeja a transação (devmode): ${submission.explorerUrl}`;
     } catch {
       return "Não foi possível confirmar a solicitação agora. Envie o comprovante novamente para tentar de novo.";
     }
   }
 
-  private async history(): Promise<string> {
+  private async history(): Promise<BotReply> {
     const history = await this.sdk.getOrganizationProofHistory(this.config.organizationId, this.config.viewerWallet);
     if (history.proofs.length === 0) return `${HISTORY_NOTICE}\n\nNenhuma proof encontrada ainda.`;
     const proofs = history.proofs.slice(0, 10).map((proof, index) => {
       const receiptHash = proof.receiptHash === undefined ? "" : `\nReceipt: ${proof.receiptHash}`;
       return `${index + 1}. ${proof.memberName} — ${proof.decision} — RID ${proof.policyVersion}\n${formatOccurredAt(proof.occurredAt)}\nProof: ${proof.proofHash}\nPolicy: ${proof.policyHash}\nExpense: ${proof.expenseHash}${receiptHash}\nExplorer: ${proof.explorerUrl}`;
     });
-    return `${HISTORY_NOTICE}\n\n${proofs.join("\n\n")}`;
+    return splitHistoryMessages(proofs);
   }
 }

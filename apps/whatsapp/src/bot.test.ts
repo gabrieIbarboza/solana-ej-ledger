@@ -102,8 +102,13 @@ describe("WhatsAppComplianceBot", () => {
       proofs: Array.from({ length: 11 }, (_, index) => ({ ...historyProof, signature: `signature-${index}`, proofHash: String(index).padStart(64, "0") }))
     });
 
-    const reply = await bot().handle({ sender: "history", body: "HISTÓRICO" });
-    expect(reply).toContain("⚠️ POC");
+    const replies = await bot().handle({ sender: "history", body: "HISTÓRICO" });
+    expect(Array.isArray(replies)).toBe(true);
+    const messages = replies as string[];
+    const reply = messages.join("\n");
+    expect(messages.length).toBeGreaterThan(1);
+    expect(messages.every((message) => message.length <= 1_500)).toBe(true);
+    expect(messages[0]).toContain("⚠️ POC");
     expect(reply).toContain(`Proof: ${"0".repeat(64)}`);
     expect(reply).toContain(`Policy: ${historyProof.policyHash}`);
     expect(reply).toContain(`Expense: ${historyProof.expenseHash}`);
